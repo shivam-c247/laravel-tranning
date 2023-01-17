@@ -7,10 +7,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
+use App\Models\{Country,State,Role,Permission};
+
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable,HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -41,4 +44,48 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+
+    /**
+     * Get the phone associated with the user.
+     */
+    public function phone()
+    {
+        return $this->hasOne(Phone::class);
+    }
+
+
+         /**
+     * Get the User's Country.
+     */
+    public function userCountry()
+    {
+        return $this->hasOneThrough(
+            Country::class,
+            state::class,
+            'id', // local key of state tables
+            'id', // local key of country id
+            'state_id', // foreign key
+            'country_id' // foreign key of state tables
+        );
+    }
+
+
+     /**
+     * Get all of the deployments for the project.
+     */
+    public function permissions()
+    {
+        return $this->hasManyThrough(Permission::class, Role::class,'id','role_id');
+    }
+
+
+    /**
+     * The roles that belong to the user.
+     */
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class);
+    }
+
 }

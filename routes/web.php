@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,5 +28,11 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('products', ProductController::class);
 });
 
+Route::get('send-email-queue', function(){
+
+    dispatch(new App\Jobs\BirthDayEmailJob());
+    return response()->json(['message'=>'Mail Send Successfully!!']);
+});
+Route::resource('users', UserController::class);
 
 require __DIR__.'/auth.php';

@@ -22,7 +22,7 @@ class ProductRepository
       */
       public function getAllProducts($paginate = true){
   
-            return Product::latest()->paginate(1);
+            return Product::latest()->paginate(4);
 
  
       }

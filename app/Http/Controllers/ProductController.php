@@ -30,17 +30,14 @@ class ProductController extends Controller
      */
     public function index()
     {
-  
+        
+
        $products =  $this->productService->getAllProducts(request()->all());
 
         return view('product.index', compact('products'));
     }
 
-    public function getProductsList(ProductDataTable $datatable)
-    {
-        return $datatable->ajax();
-    }
-
+   
     /**
      * Show the form for creating a new resource.
      *
@@ -122,6 +119,15 @@ class ProductController extends Controller
 
         return redirect()->route('products.index')
             ->with('success', 'Product deleted successfully');
+    }
+
+
+    /**
+     * The roles that belong to the user.
+     */
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class);
     }
 
 }
